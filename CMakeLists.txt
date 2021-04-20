@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   rosbag
   sensor_msgs
   geometry_msgs
+  tf_conversions
 )
 
 # NLOPT is frustratingly inconsistent in the name of its cmake file so we use our own

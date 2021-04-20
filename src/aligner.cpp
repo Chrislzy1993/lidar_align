@@ -1,3 +1,5 @@
+
+#include <tf_conversions/tf_eigen.h>
 #include "lidar_align/aligner.h"
 
 namespace lidar_align {
@@ -25,6 +27,16 @@ Aligner::Config Aligner::getConfig(ros::NodeHandle* nh) {
             config.output_pointcloud_path);
   nh->param("output_calibration_path", config.output_calibration_path,
             config.output_calibration_path);
+  
+  config.inital_guess = {-1.0835834304772789e+00, 1.0078768763568074e-01, 0.16, 0.011708273348510573, -0.019136918548546458, -2.2858320751956716};
+
+  std::cout << "local: " << config.local << std::endl;
+  std::cout << "inital_guess: " << config.inital_guess[0] << " " << config.inital_guess[1] << " " \
+                                << config.inital_guess[2] << " " << config.inital_guess[3] << " " \
+                                << config.inital_guess[4] << " " << config.inital_guess[5] << " " << std::endl;
+  std::cout << "angular_range: " << config.angular_range << std::endl;
+  std::cout << "translation_range: " << config.translation_range << std::endl;
+  std::cout << "time_cal: " << config.time_cal << std::endl;
 
   return config;
 }
@@ -294,7 +306,20 @@ void Aligner::lidarOdomTransform(Lidar* lidar, Odom* odom) {
     file.close();
   }
   ROS_INFO("\e[1mFinal Calibration:\e[0m                                ");
-  std::cout << output_calibration;
+  Transform calib_result = lidar->getOdomLidarTransform();
+  std::cout << "transformation matrix: \n" << calib_result.matrix() << std::endl;
+  std::cout << "rotation: \n" << calib_result.rotation().matrix() << std::endl;
+  std::cout << "translation: \n" << calib_result.translation().transpose() << std::endl;
+  Eigen::Quaterniond q_eigen = calib_result.rotation().cast<double>();
+  tf::Quaternion q_tf;
+  tf::quaternionEigenToTF(q_eigen, q_tf);
+  double roll = 0.0, pitch = 0.0, yaw = 0.0; 
+  tf::Matrix3x3(q_tf).getRPY(roll, pitch, yaw);
+  roll  = roll  * 180.0 / M_PI;
+  pitch = pitch * 180.0 / M_PI;
+  yaw   = yaw   * 180.0 / M_PI;
+  std::cout << "eular angle: \n" << roll << " " << pitch << " " << yaw << std::endl;
+  // std::cout << output_calibration;
 }
 
 }  // namespace lidar_align

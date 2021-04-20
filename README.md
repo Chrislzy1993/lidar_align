@@ -115,3 +115,11 @@ Note that Maplab has two CSV exporters. This file-format is the same as produced
 | `global_knn_max_dist` | Error between points is limited to this value during global optimization. | 1.0 |
 | `local_knn_max_dist` | Error between points is limited to this value during local optimization. | 0.1 |
 | `time_cal` | True to perform time offset calibration | true |
+
+
+
+# 后记
+
+使用无人车数据进行测试，平面运动采集8字，使用了较准确的8字，效果不理想，拼接出来的点云也是一团糊
+
+测试数据地址：https://drive.google.com/file/d/11fUwbVnvej4NZ_0Mntk7XJ2YrZ5Dk3Ub/view

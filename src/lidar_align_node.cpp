@@ -10,7 +10,6 @@ using namespace lidar_align;
 
 int main(int argc, char** argv) {
   ros::init(argc, argv, "lidar_align");
-
   ros::NodeHandle nh, nh_private("~");
 
   Loader loader(Loader::getConfig(&nh_private));
